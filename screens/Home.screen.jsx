@@ -11,6 +11,11 @@ export const HomeScreen = ({ position }) => {
   const [temp, setTemp] = useState(null);
   const [city, setCity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeg, setIsDeg] = useState(true);
+
+  const switchTempUnits = () => {
+    setIsDeg(!isDeg);
+  };
   useEffect(() => {
     const requestInfo = {
       method: "GET",
@@ -27,7 +32,6 @@ export const HomeScreen = ({ position }) => {
       .then((res) => {
         if (res) {
           setTemp({
-            isDeg: true,
             temp: kelvinToCelsius(res.main.temp),
             temp_min: kelvinToCelsius(res.main.temp_min),
             temp_max: kelvinToCelsius(res.main.temp_max),
@@ -41,13 +45,6 @@ export const HomeScreen = ({ position }) => {
 
   function kelvinToCelsius(k) {
     return Math.floor(k - 273.15);
-  }
-
-  function celsiusToFahrenheit(c) {
-    return Math.floor((c * 9) / 5 + 32);
-  }
-  function fahrenheitToCelsius(f) {
-    return Math.floor((f - 32) * (5 / 9));
   }
 
   return (
@@ -75,7 +72,7 @@ export const HomeScreen = ({ position }) => {
                 backgroundColor: "#F4B67C",
               }}
               mode="contained"
-              onPress={() => console.log("Pressed")}
+              onPress={switchTempUnits}
             >
               <FontAwesome6
                 name="arrow-right-arrow-left"
@@ -83,7 +80,12 @@ export const HomeScreen = ({ position }) => {
                 color="#1F414B"
               />
             </Button>
-            <MainWeather weather={weather} temp={temp} city={city} />
+            <MainWeather
+              weather={weather}
+              temp={temp}
+              city={city}
+              isDeg={isDeg}
+            />
             <View style={{ width: "80%" }}>
               <TextInput
                 // contentStyle={{ backgroundColor: "#93D5FA" }}
