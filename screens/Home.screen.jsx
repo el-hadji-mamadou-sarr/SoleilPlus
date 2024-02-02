@@ -47,6 +47,8 @@ export const HomeScreen = ({ position }) => {
     return Math.floor(k - 273.15);
   }
 
+
+
   return (
     <>
       {isLoading ? (
@@ -86,10 +88,11 @@ export const HomeScreen = ({ position }) => {
               city={city}
               isDeg={isDeg}
             />
+                   
             <View style={{ width: "80%" }}>
               <TextInput
                 // contentStyle={{ backgroundColor: "#93D5FA" }}
-                style={{ height: 30, backgroundColor: "#F4B67C" }}
+                style={{ height: 30, backgroundColor: "white" }}
                 left={<TextInput.Icon icon="magnify" />}
               />
             </View>
