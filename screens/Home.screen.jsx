@@ -47,27 +47,21 @@ export const HomeScreen = ({ position }) => {
     return Math.floor(k - 273.15);
   }
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSearch = async () => {
-      const response = await axios.get(
-        `https://api-adresse.data.gouv.fr/search/?q=${city}&type=municipality`
-      );
+  const handleSearch = (query) => {
+    const API_KEY = "6fbedd40e91ffc5670f8ff2ad82440b3";
+    const searchUrl = `https://api.openweathermap.org/data/2.5/find?q=${query}&type=like&mode=json&appid=${API_KEY}`;
 
-      if (response.data.features.length > 0) {
-        const regions = response.data.features.map(
-          (feature) => feature.properties.label
-        );
-        setSearchResult(regions);
-      } else {
-        setSearchResult([]);
-        Alert.alert('Aucun résultat trouvé');
-      }
-    }
-}
-
-
+    fetch(searchUrl, { method: 'GET' })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.error('Error fetching city suggestions:', error);
+      });
+  };
 
   return (
     <>
@@ -108,12 +102,16 @@ export const HomeScreen = ({ position }) => {
               city={city}
               isDeg={isDeg}
             />
-                   
             <View style={{ width: "80%" }}>
               <TextInput
-                // contentStyle={{ backgroundColor: "#93D5FA" }}
                 style={{ height: 30, backgroundColor: "white" }}
                 left={<TextInput.Icon icon="magnify" />}
+                placeholder="Search City"
+                onChangeText={(text) => {
+                  setSearchQuery(text);
+                  handleSearch(text);
+                }}
+                value={searchQuery}
               />
             </View>
             <View
@@ -165,4 +163,4 @@ export const HomeScreen = ({ position }) => {
       )}
     </>
   );
-
+};
