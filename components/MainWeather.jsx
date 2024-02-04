@@ -25,7 +25,7 @@ export const MainWeather = ({ weather, temp, city, isDeg }) => {
         {isDeg ? "°C" : "°F"}
       </Text>
 
-      <Text style={{ fontSize: 20, fontWeight: 400, color: "#1F414B" }}>
+      <Text style={{ fontSize: 20, fontWeight: 400, color: "white" }}>
         {getWeatherTranslation(weather)}
       </Text>
       <View style={{ flexDirection: "row", gap: 50, marginVertical: 10 }}>
