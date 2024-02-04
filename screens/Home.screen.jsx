@@ -120,7 +120,17 @@ export const HomeScreen = ({ position }) => {
                 onChangeText={(text) => setSearchQuery(text)}
                 value={searchQuery}
               />
-              
+              <Button
+                style={{
+                  marginTop: 10,
+                  width: '100%',
+                  backgroundColor: '#1F414B',
+                }}
+                mode="contained"
+                onPress={handleSearch}
+              >
+                Search
+              </Button>
             </View>
             <View
               style={{
