@@ -6,14 +6,13 @@ import { MainWeather } from "../components/MainWeather";
 import { Icon, MD3Colors } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { SplashScreen } from "./Splash.screen";
-import { SearchResultBox } from "../components/SearchResultBox";
 export const HomeScreen = ({ position }) => {
   const [weather, setWeather] = useState(null);
   const [temp, setTemp] = useState(null);
   const [city, setCity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeg, setIsDeg] = useState(true);
-  const [searchResult, setSearchResult] = useState(null);
+
   const switchTempUnits = () => {
     setIsDeg(!isDeg);
   };
@@ -39,7 +38,16 @@ export const HomeScreen = ({ position }) => {
           });
           setWeather(res.weather[0].main);
           setCity(res.name);
-          setIsLoading(false);
+          const background = imageAssets.find(
+            (asset) => asset.name === res.weather[0].main
+          );
+
+          if (background) {
+            setBackgroundImage(background.asset);
+          }
+          setInterval(() => {
+            setIsLoading(false);
+          }, 1000);
         }
       });
   }, []);
@@ -69,26 +77,10 @@ export const HomeScreen = ({ position }) => {
     fetch(url, requestInfo)
       .then((res) => res.json())
       .then((res) => {
-        const coordinates = res.features[0].geometry.coordinates;
-        console.log(coordinates);
-        if (coordinates) {
-          const API_KEY = "6fbedd40e91ffc5670f8ff2ad82440b3";
-          const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates[1]}&lon=${coordinates[0]}&lang=fr&appid=${API_KEY}`;
-          fetch(weatherUrl, requestInfo)
-            .then((res) => res.json())
-            .then((res) => {
-              if (res) {
-                setSearchResult({
-                  temp: kelvinToCelsius(res.main.temp),
-                  temp_min: kelvinToCelsius(res.main.temp_min),
-                  temp_max: kelvinToCelsius(res.main.temp_max),
-                  country: res.sys.country,
-                  city: res.name,
-                  icon: res.weather[0].icon,
-                });
-              }
-            });
-        }
+        console.log(res);
+      })
+      .catch((error) => {
+        console.error('Error fetching city suggestions:', error);
       });
   };
 
@@ -101,7 +93,7 @@ export const HomeScreen = ({ position }) => {
         <SplashScreen />
       ) : (
         <ImageBackground
-          source={require("../assets/rain.jpeg")}
+          source={backgroundImage}
           style={{ width: "100%", height: "100%" }}
         >
           <View
@@ -118,6 +110,7 @@ export const HomeScreen = ({ position }) => {
                 alignSelf: "flex-end",
                 width: "40px",
                 backgroundColor: "#F4B67C",
+                marginTop: 20,
               }}
               mode="contained"
               onPress={switchTempUnits}
@@ -145,7 +138,50 @@ export const HomeScreen = ({ position }) => {
                 value={searchQuery}
               />
             </View>
-            {searchResult && <SearchResultBox result={searchResult} />}
+            <View
+              style={{
+                marginTop: 40,
+                width: "90%",
+                minHeight: 209,
+                backgroundColor: "#1F414B",
+                borderRadius: 50,
+                paddingVertical: 41,
+                paddingHorizontal: 30,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View style={{ flexDirection: "column", gap: 5 }}>
+                <Text style={{ fontSize: 34, fontWeight: 400, color: "white" }}>
+                  20°
+                </Text>
+                <View style={{ flexDirection: "row", gap: 20 }}>
+                  <Text
+                    style={{ fontSize: 16, fontWeight: 400, color: "grey" }}
+                  >
+                    H:88°
+                  </Text>
+                  <Text
+                    style={{ fontSize: 16, fontWeight: 400, color: "grey" }}
+                  >
+                    L:18°
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 20, fontWeight: 400, color: "white" }}>
+                  Dakar, Senegal
+                </Text>
+              </View>
+
+              <View>
+                <Image
+                  style={{ width: 100, height: 100 }}
+                  source={{
+                    uri: "https://openweathermap.org/img/wn/10d@2x.png",
+                  }}
+                />
+              </View>
+            </View>
           </View>
         </ImageBackground>
       )}
