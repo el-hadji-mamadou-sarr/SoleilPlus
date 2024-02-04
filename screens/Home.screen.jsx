@@ -7,6 +7,8 @@ import { Icon, MD3Colors } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { SplashScreen } from "./Splash.screen";
 import { SearchResultBox } from "../components/SearchResultBox";
+import { imageAssets } from "../utils/getImage-assets";
+
 export const HomeScreen = ({ position }) => {
   const [weather, setWeather] = useState(null);
   const [temp, setTemp] = useState(null);
@@ -14,6 +16,9 @@ export const HomeScreen = ({ position }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeg, setIsDeg] = useState(true);
   const [searchResult, setSearchResult] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState(
+    require("../assets/logo.jpeg")
+  );
   const switchTempUnits = () => {
     setIsDeg(!isDeg);
   };
@@ -39,7 +44,16 @@ export const HomeScreen = ({ position }) => {
           });
           setWeather(res.weather[0].main);
           setCity(res.name);
-          setIsLoading(false);
+          const background = imageAssets.find(
+            (asset) => asset.name === res.weather[0].main
+          );
+
+          if (background) {
+            setBackgroundImage(background.asset);
+          }
+          setInterval(() => {
+            setIsLoading(false);
+          }, 1000);
         }
       });
   }, []);
@@ -70,7 +84,7 @@ export const HomeScreen = ({ position }) => {
       .then((res) => res.json())
       .then((res) => {
         const coordinates = res.features[0].geometry.coordinates;
-        console.log(coordinates);
+
         if (coordinates) {
           const API_KEY = "6fbedd40e91ffc5670f8ff2ad82440b3";
           const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates[1]}&lon=${coordinates[0]}&lang=fr&appid=${API_KEY}`;
@@ -101,7 +115,7 @@ export const HomeScreen = ({ position }) => {
         <SplashScreen />
       ) : (
         <ImageBackground
-          source={require("../assets/rain.jpeg")}
+          source={backgroundImage}
           style={{ width: "100%", height: "100%" }}
         >
           <View
@@ -118,6 +132,7 @@ export const HomeScreen = ({ position }) => {
                 alignSelf: "flex-end",
                 width: "40px",
                 backgroundColor: "#F4B67C",
+                marginTop: 20,
               }}
               mode="contained"
               onPress={switchTempUnits}
@@ -145,7 +160,7 @@ export const HomeScreen = ({ position }) => {
                 value={searchQuery}
               />
             </View>
-            {searchResult && <SearchResultBox result={searchResult} />}
+            {searchResult && <SearchResultBox result={searchResult} setSearchResult={setSearchResult}/>}
           </View>
         </ImageBackground>
       )}
