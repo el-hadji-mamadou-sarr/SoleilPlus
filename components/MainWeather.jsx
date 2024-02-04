@@ -16,23 +16,23 @@ export const MainWeather = ({ weather, temp, city, isDeg }) => {
   }
   return (
     <View style={{ alignItems: "center", marginBottom: 5 }}>
-      <Text style={{ fontSize: 34, fontWeight: 400, color: "white" }}>
+      <Text style={{ fontSize: 34, fontWeight: 400, color: "#1F414B" }}>
         {city}
       </Text>
 
-      <Text style={{ fontSize: 96, fontWeight: 400, color: "white" }}>
+      <Text style={{ fontSize: 96, fontWeight: 400, color: "#1F414B" }}>
         {isDeg ? temp.temp : celsiusToFahrenheit(temp.temp)}
         {isDeg ? "°C" : "°F"}
       </Text>
 
-      <Text style={{ fontSize: 20, fontWeight: 400, color: "white" }}>
+      <Text style={{ fontSize: 24, fontWeight: 600, color: "#1F414B" }}>
         {getWeatherTranslation(weather)}
       </Text>
       <View style={{ flexDirection: "row", gap: 50, marginVertical: 10 }}>
-        <Text style={{ fontSize: 20, fontWeight: 400, color: "white" }}>
+        <Text style={{ fontSize: 20, fontWeight: 500, color: "#1F414B" }}>
           H:{temp.temp_max}°
         </Text>
-        <Text style={{ fontSize: 20, fontWeight: 400, color: "white" }}>
+        <Text style={{ fontSize: 20, fontWeight: 500, color: "#1F414B" }}>
           L:{temp.temp_min}°
         </Text>
       </View>
